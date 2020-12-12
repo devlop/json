@@ -1,0 +1,18 @@
+{
+    "name": "devlop/json",
+    "description": "Simple JSON wrapper for better experience working with json data",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Johan Rosenson",
+            "email": "johan@devlop.se"
+        }
+    ],
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "Devlop\\Json\\": "src/"
+        }
+    }
+}
