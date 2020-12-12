@@ -19,17 +19,16 @@ final class Json
      * @link https://www.php.net/manual/en/function.json-decode.php
      *
      * @param  string  $json
-     * @param  int  $depth
      * @return mixed
      *
      * @throws JsonException
      */
-    public static function decode(string $json, int $depth = 512)
+    public static function decode(string $json)
     {
         return \json_decode(
             $json,
             null,
-            $depth,
+            512,
             \JSON_THROW_ON_ERROR,
         );
     }
@@ -40,18 +39,35 @@ final class Json
      * @link https://www.php.net/manual/en/function.json-decode.php
      *
      * @param  string  $json
-     * @param  int  $depth
      * @return mixed
      *
      * @throws JsonException
      */
-    public static function decodeAssoc(string $json, int $depth = 512)
+    public static function decodeAssoc(string $json)
     {
         return \json_decode(
             $json,
             null,
-            $depth,
+            512,
             \JSON_THROW_ON_ERROR | \JSON_OBJECT_AS_ARRAY,
+        );
+    }
+
+    /**
+     * Returns the JSON representation of a value
+     *
+     * @link https://www.php.net/manual/en/function.json-encode.php
+     *
+     * @param  mixed  $value
+     * @return string
+     *
+     * @throws JsonException
+     */
+    public static function encode($value) : string
+    {
+        return \json_encode(
+            $value,
+            \JSON_THROW_ON_ERROR,
         );
     }
 }
