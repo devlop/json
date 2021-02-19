@@ -118,7 +118,7 @@ final class JsonEncodeTest extends TestCase
         }
     }
 
-    public function test_encodes_only_accepts_array_or_object() : void
+    public function test_encode_only_accepts_array_or_object() : void
     {
         $arguments = [
             'string',

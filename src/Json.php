@@ -24,8 +24,20 @@ final class Json
     {
         if (! is_array($value) && ! is_object($value)) {
             throw new JsonException(
-                'A value of a type that cannot be encoded was given',
-                \JSON_ERROR_UNSUPPORTED_TYPE
+                'A value of a type that cannot be encoded was given, only arrays and objects are supported.',
+                \JSON_ERROR_UNSUPPORTED_TYPE,
+            );
+        }
+    }
+
+    private static function assertCanDecode($value) : void
+    {
+        $delimiters = mb_substr($value, 0, 1) . mb_substr($value, -1);
+
+        if (! in_array($delimiters, ['[]', '{}'], true)) {
+            throw new JsonException(
+                'Invalid or malformed JSON, only arrays and objects are supported.',
+                \JSON_ERROR_UNSUPPORTED_TYPE,
             );
         }
     }
@@ -91,6 +103,8 @@ final class Json
      */
     public static function decode(string $json, int $flags = 0, int $depth = 512)
     {
+        self::assertCanDecode($json);
+
         return \json_decode(
             $json,
             null,
@@ -107,12 +121,14 @@ final class Json
      * @param  string  $json
      * @param  int  $flags
      * @param  int  $depth
-     * @return array|object
+     * @return array
      *
      * @throws JsonException
      */
-    public static function decodeAssoc(string $json, int $flags = 0, int $depth = 512)
+    public static function decodeAssoc(string $json, int $flags = 0, int $depth = 512) : array
     {
+        self::assertCanDecode($json);
+
         return self::decode(
             $json,
             $flags | \JSON_OBJECT_AS_ARRAY,
