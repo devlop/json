@@ -80,8 +80,6 @@ final class Json
      */
     public static function pretty($value, int $flags = 0, int $depth = 512) : string
     {
-        self::assertCanEncode($value);
-
         return self::encode(
             $value,
             $flags | \JSON_PRETTY_PRINT,
@@ -127,8 +125,6 @@ final class Json
      */
     public static function decodeAssoc(string $json, int $flags = 0, int $depth = 512) : array
     {
-        self::assertCanDecode($json);
-
         return self::decode(
             $json,
             $flags | \JSON_OBJECT_AS_ARRAY,
