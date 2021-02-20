@@ -6,15 +6,13 @@ namespace Devlop\Json\Tests;
 
 use Devlop\Json\Json;
 use Devlop\Json\Tests\Assertions\AssertException;
-use Devlop\Json\Tests\Dummies\JsonSerializableClass;
-use Devlop\Json\Tests\Dummies\NonJsonSerializableClass;
 use PHPUnit\Framework\TestCase;
 
 final class JsonEncodeTest extends TestCase
 {
     use AssertException;
 
-    public function test_encodes_array_with_numeric_values() : void
+    public function test_encodes_integer_values_array() : void
     {
         $output = Json::encode([
             1,
@@ -22,10 +20,12 @@ final class JsonEncodeTest extends TestCase
             3,
         ]);
 
-        $this->assertEquals('[1,2,3]', $output);
+        $expectedOutput = '[1,2,3]';
+
+        $this->assertEquals($expectedOutput, $output);
     }
 
-    public function test_encodes_array_with_string_values() : void
+    public function test_encodes_string_values_array() : void
     {
         $output = Json::encode([
             'one',
@@ -33,10 +33,12 @@ final class JsonEncodeTest extends TestCase
             'three',
         ]);
 
-        $this->assertEquals('["one","two","three"]', $output);
+        $expectedOutput = '["one","two","three"]';
+
+        $this->assertEquals($expectedOutput, $output);
     }
 
-    public function test_encodes_associative_array_with_numeric_values() : void
+    public function test_encodes_keyed_integer_values_array() : void
     {
         $output = Json::encode([
             'first' => 1,
@@ -44,10 +46,12 @@ final class JsonEncodeTest extends TestCase
             'third' => 3,
         ]);
 
-        $this->assertEquals('{"first":1,"second":2,"third":3}', $output);
+        $expectedOutput = '{"first":1,"second":2,"third":3}';
+
+        $this->assertEquals($expectedOutput, $output);
     }
 
-    public function test_encodes_associative_array_with_string_values() : void
+    public function test_encodes_keyed_string_values_array() : void
     {
         $output = Json::encode([
             'first' => 'one',
@@ -55,24 +59,47 @@ final class JsonEncodeTest extends TestCase
             'third' => 'three',
         ]);
 
-        $this->assertEquals('{"first":"one","second":"two","third":"three"}', $output);
+        $expectedOutput = '{"first":"one","second":"two","third":"three"}';
+
+        $this->assertEquals($expectedOutput, $output);
     }
 
-    public function test_encodes_non_json_serializable_class() : void
+    public function test_encodes_object() : void
     {
-        $output = Json::encode(new NonJsonSerializableClass('Johan', [4, 8, 15, 16, 23, 42]));
+        $object = new class {
+            public string $name = 'The Numbers';
+            public array $numbers = [4, 8, 15, 16, 23, 42];
+        };
 
-        $this->assertEquals('{"name":"Johan","secrets":[4,8,15,16,23,42]}', $output);
+        $output = Json::encode($object);
+
+        $expectedOutput = '{"name":"The Numbers","numbers":[4,8,15,16,23,42]}';
+
+        $this->assertEquals($expectedOutput, $output);
     }
 
-    public function test_encodes_json_serializable_class() : void
+    public function test_encodes_json_serializable_object() : void
     {
-        $output = Json::encode(new JsonSerializableClass('Johan', [4, 8, 15, 16, 23, 42]));
+        $object = new class implements \JsonSerializable {
+            public string $name = 'The Numbers';
+            public array $numbers = [4, 8, 15, 16, 23, 42];
 
-        $this->assertEquals('{"name":"Johan","secrets":[42,23,16,15,8,4],"sum":108}', $output);
+            public function jsonSerialize() : array
+            {
+                return [
+                    'name' => $this->name,
+                ];
+            }
+        };
+
+        $output = Json::encode($object);
+
+        $expectedOutput = '{"name":"The Numbers"}';
+
+        $this->assertEquals($expectedOutput, $output);
     }
 
-    public function test_flags_are_honored_when_encoding() : void
+    public function test_encode_flags_argument() : void
     {
         $input = [
             '1',
@@ -92,12 +119,14 @@ final class JsonEncodeTest extends TestCase
             \JSON_FORCE_OBJECT | \JSON_NUMERIC_CHECK => '{"0":1,"1":2,"2":3}',
         ];
 
-        foreach ($flags as $flag => $output) {
-            $this->assertEquals($output, Json::encode($input, $flag));
+        foreach ($flags as $flag => $expectedOutput) {
+            $output = Json::encode($input, $flag);
+
+            $this->assertEquals($expectedOutput, $output);
         }
     }
 
-    public function test_depth_value_is_honored_when_encoding() : void
+    public function test_encode_depth_argument() : void
     {
         $this->expectException(\JsonException::class);
 
@@ -118,7 +147,7 @@ final class JsonEncodeTest extends TestCase
         }
     }
 
-    public function test_encode_only_accepts_array_or_object() : void
+    public function test_does_not_encode_scalar_or_null_arguments() : void
     {
         $arguments = [
             'string',
@@ -131,8 +160,22 @@ final class JsonEncodeTest extends TestCase
 
         foreach ($arguments as $argument) {
             $this->assertException(\JsonException::class, function () use ($argument) {
-                Json::encode($argument);
+                Json::pretty($argument);
             });
+        }
+    }
+
+    public function test_encodes_array_and_objects() : void
+    {
+        $arguments = [
+            [1, 2, 3],
+            (object) [1, 2, 3],
+        ];
+
+        foreach ($arguments as $argument) {
+            // $this->assertException(\JsonException::class, function () use ($argument) {
+            //     Json::pretty($argument);
+            // });
         }
     }
 }

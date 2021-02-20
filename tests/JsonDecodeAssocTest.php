@@ -5,49 +5,43 @@ declare(strict_types=1);
 namespace Devlop\Json\Tests;
 
 use Devlop\Json\Json;
-use Devlop\Json\Tests\Assertions\AssertException;
 use PHPUnit\Framework\TestCase;
 
 final class JsonDecodeAssocTest extends TestCase
 {
-    use AssertException;
-
-    public function test_decode_assoc_sequential_array_as_usual() : void
+    public function test_decode_assoc_decodes_array_as_sequential_array() : void
     {
         $output = Json::decodeAssoc('[1,2,3]');
 
-        $this->assertEquals([1,2,3], $output);
+        $this->assertIsArray($output);
+        $this->assertTrue(array_is_list($output));
+
+        $expectedOutput = [
+            1,
+            2,
+            3,
+        ];
+
+        $this->assertEquals($expectedOutput, $output);
     }
 
-    public function test_decode_assoc_key_value_object_as_assoc_array() : void
+    public function test_decode_assoc_decodes_key_value_object_as_assoc_array() : void
     {
         $output = Json::decodeAssoc('{"first":1,"second":2,"third":3}');
 
-        $expected = [
+        $this->assertIsArray($output);
+
+        $expectedOutput = [
             'first' => 1,
             'second' => 2,
             'third' => 3,
         ];
 
-        $this->assertEquals($expected, $output);
+        $this->assertEquals($expectedOutput, $output);
     }
 
-    public function test_decode_assoc_only_decodes_arrays_and_objects() : void
+    public function test_pretty_internally_invokes_encode_method() : void
     {
-        $arguments = [
-            '"string"',
-            "1",
-            "1.5",
-            "false",
-            "true",
-            "null",
-            "",
-        ];
-
-        foreach ($arguments as $argument) {
-            $this->assertException(\JsonException::class, function () use ($argument) {
-                Json::decodeAssoc($argument);
-            });
-        }
+        // learn mocking
     }
 }

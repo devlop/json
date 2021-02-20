@@ -32,9 +32,9 @@ final class Json
 
     private static function assertCanDecode($value) : void
     {
-        $delimiters = mb_substr($value, 0, 1) . mb_substr($value, -1);
+        $ends = mb_substr($value, 0, 1) . mb_substr($value, -1);
 
-        if (! in_array($delimiters, ['[]', '{}'], true)) {
+        if (! in_array($ends, ['[]', '{}'], true)) {
             throw new JsonException(
                 'Invalid or malformed JSON, only arrays and objects are supported.',
                 \JSON_ERROR_UNSUPPORTED_TYPE,
