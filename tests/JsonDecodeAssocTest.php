@@ -39,9 +39,4 @@ final class JsonDecodeAssocTest extends TestCase
 
         $this->assertEquals($expectedOutput, $output);
     }
-
-    public function test_pretty_internally_invokes_encode_method() : void
-    {
-        // learn mocking
-    }
 }

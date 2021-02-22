@@ -5,12 +5,13 @@ declare(strict_types=1);
 namespace Devlop\Json\Tests;
 
 use Devlop\Json\Json;
-use Devlop\Json\Tests\Assertions\AssertException;
+use Devlop\PHPUnit\ExceptionAssertions;
+use JsonException;
 use PHPUnit\Framework\TestCase;
 
 final class JsonDecodeTest extends TestCase
 {
-    use AssertException;
+    use ExceptionAssertions;
 
     public function test_decodes_integer_values_array() : void
     {
@@ -61,12 +62,23 @@ final class JsonDecodeTest extends TestCase
 
     public function test_decode_flags_argument() : void
     {
-        //
+        $output = Json::decode(
+            '{"number":1234567890123456789012345678901234567890}',
+            \JSON_BIGINT_AS_STRING
+        );
+
+        $expectedOutput = (object) [
+            'number' => '1234567890123456789012345678901234567890',
+        ];
+
+        $this->assertEquals($expectedOutput, $output);
     }
 
     public function test_decode_depth_argument() : void
     {
-        //
+        $this->assertExceptionThrown(JsonException::class, function () {
+            Json::decode('{"first":["second"]}', Json::NO_FLAGS, 1);
+        });
     }
 
     public function test_does_not_decode_scalar_or_null() : void
@@ -82,14 +94,9 @@ final class JsonDecodeTest extends TestCase
         ];
 
         foreach ($arguments as $argument) {
-            $this->assertException(\JsonException::class, function () use ($argument) {
+            $this->assertExceptionThrown(JsonException::class, function () use ($argument) {
                 Json::decodeAssoc($argument);
             });
         }
-    }
-
-    public function test_pretty_internally_invokes_encode_method() : void
-    {
-        // learn mocking
     }
 }

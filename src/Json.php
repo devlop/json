@@ -22,7 +22,7 @@ final class Json
 
     private static function assertCanEncode($value) : void
     {
-        if (! is_array($value) && ! is_object($value)) {
+        if (! \is_array($value) && ! \is_object($value)) {
             throw new JsonException(
                 'A value of a type that cannot be encoded was given, only arrays and objects are supported.',
                 \JSON_ERROR_UNSUPPORTED_TYPE,
@@ -32,9 +32,9 @@ final class Json
 
     private static function assertCanDecode($value) : void
     {
-        $ends = mb_substr($value, 0, 1) . mb_substr($value, -1);
+        $ends = \mb_substr($value, 0, 1) . \mb_substr($value, -1);
 
-        if (! in_array($ends, ['[]', '{}'], true)) {
+        if (! \in_array($ends, ['[]', '{}'], true)) {
             throw new JsonException(
                 'Invalid or malformed JSON, only arrays and objects are supported.',
                 \JSON_ERROR_UNSUPPORTED_TYPE,

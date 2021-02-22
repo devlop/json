@@ -5,12 +5,33 @@ declare(strict_types=1);
 namespace Devlop\Json\Tests;
 
 use Devlop\Json\Json;
-use Devlop\Json\Tests\Assertions\AssertException;
+use Devlop\PHPUnit\ExceptionAssertions;
+use JsonException;
 use PHPUnit\Framework\TestCase;
+use Throwable;
 
 final class JsonEncodeTest extends TestCase
 {
-    use AssertException;
+    use ExceptionAssertions;
+
+    public function test_encode_throws_exception_on_error()
+    {
+        $recursion = [
+            &$recursion,
+        ];
+
+        $arguments = [
+            $recursion,
+            INF,
+            NAN,
+        ];
+
+        foreach ($arguments as $argument) {
+            $this->assertExceptionThrown(JsonException::class, function () use ($argument) {
+                Json::encode($argument);
+            });
+        }
+    }
 
     public function test_encodes_integer_values_array() : void
     {
@@ -128,23 +149,24 @@ final class JsonEncodeTest extends TestCase
 
     public function test_encode_depth_argument() : void
     {
-        $this->expectException(\JsonException::class);
+        $argument = [
+            'first' => 'one',
+            'second' => 'two',
+            'third' => [
+                'three',
+                'four',
+                'five',
+            ],
+        ];
 
-        try {
-            $output = Json::encode([
-                'first' => 'one',
-                'second' => 'two',
-                'third' => [
-                    'three',
-                    'four',
-                    'five',
-                ],
-            ], Json::NO_FLAGS, 1);
-        } catch (\JsonException $e) {
-            $this->assertEquals('Maximum stack depth exceeded', $e->getMessage());
-
-            throw $e;
-        }
+        $this->assertExceptionThrown(JsonException::class, function () use ($argument) {
+            Json::encode($argument, Json::NO_FLAGS, 1);
+        }, function (Throwable $exception) : void {
+            $this->assertEquals(
+                'Maximum stack depth exceeded',
+                $exception->getMessage(),
+            );
+        });
     }
 
     public function test_does_not_encode_scalar_or_null_arguments() : void
@@ -159,7 +181,7 @@ final class JsonEncodeTest extends TestCase
         ];
 
         foreach ($arguments as $argument) {
-            $this->assertException(\JsonException::class, function () use ($argument) {
+            $this->assertExceptionThrown(JsonException::class, function () use ($argument) {
                 Json::pretty($argument);
             });
         }
@@ -173,9 +195,9 @@ final class JsonEncodeTest extends TestCase
         ];
 
         foreach ($arguments as $argument) {
-            // $this->assertException(\JsonException::class, function () use ($argument) {
-            //     Json::pretty($argument);
-            // });
+            $this->assertExceptionNotThrown(JsonException::class, function () use ($argument) {
+                Json::pretty($argument);
+            });
         }
     }
 }
