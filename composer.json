@@ -9,6 +9,9 @@
             "email": "johan@devlop.se"
         }
     ],
+    "require": {
+        "php": "^7.4|^8.0"
+    },
     "require-dev": {
         "devlop/phpunit-exception-assertions": "^1.0",
         "phpunit/phpunit": "^9.5",
