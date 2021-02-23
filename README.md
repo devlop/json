@@ -5,7 +5,7 @@
 
 # Json
 
-JSON wrapper that provide better developer experiance than the native `json_encode` and `json_decode`.
+JSON wrapper that provide better developer experience than the native `json_encode` and `json_decode`.
 
 # Installation
 
