@@ -9,7 +9,8 @@ use PHPUnit\Framework\TestCase;
 
 final class JsonPrettyTest extends TestCase
 {
-    public function test_pretty_produces_formatted_output() : void
+    /** @test */
+    public function pretty_produces_formatted_output() : void
     {
         $output = Json::pretty([
             'first' => 1,

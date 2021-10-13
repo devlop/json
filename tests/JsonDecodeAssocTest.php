@@ -9,7 +9,8 @@ use PHPUnit\Framework\TestCase;
 
 final class JsonDecodeAssocTest extends TestCase
 {
-    public function test_decode_assoc_decodes_array_as_sequential_array() : void
+    /** @test */
+    public function decode_assoc_decodes_array_as_sequential_array() : void
     {
         $output = Json::decodeAssoc('[1,2,3]');
 
@@ -25,7 +26,8 @@ final class JsonDecodeAssocTest extends TestCase
         $this->assertEquals($expectedOutput, $output);
     }
 
-    public function test_decode_assoc_decodes_key_value_object_as_assoc_array() : void
+    /** @test */
+    public function decode_assoc_decodes_key_value_object_as_assoc_array() : void
     {
         $output = Json::decodeAssoc('{"first":1,"second":2,"third":3}');
 

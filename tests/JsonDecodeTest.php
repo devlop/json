@@ -13,7 +13,8 @@ final class JsonDecodeTest extends TestCase
 {
     use ExceptionAssertions;
 
-    public function test_decodes_integer_values_array() : void
+    /** @test */
+    public function decodes_integer_values_array() : void
     {
         $output = Json::decode('[1,2,3]');
 
@@ -29,7 +30,8 @@ final class JsonDecodeTest extends TestCase
         $this->assertEquals($expectedOutput, $output);
     }
 
-    public function test_decodes_string_values_array() : void
+    /** @test */
+    public function decodes_string_values_array() : void
     {
         $output = Json::decode('["one","two","three"]');
 
@@ -45,7 +47,8 @@ final class JsonDecodeTest extends TestCase
         $this->assertEquals($expectedOutput, $output);
     }
 
-    public function test_decodes_key_value_object_as_object() : void
+    /** @test */
+    public function decodes_key_value_object_as_object() : void
     {
         $output = Json::decode('{"first":1,"second":2,"third":3}');
 
@@ -60,7 +63,8 @@ final class JsonDecodeTest extends TestCase
         $this->assertEquals($expectedOutput, $output);
     }
 
-    public function test_decode_flags_argument() : void
+    /** @test */
+    public function decode_flags_argument() : void
     {
         $output = Json::decode(
             '{"number":1234567890123456789012345678901234567890}',
@@ -74,14 +78,16 @@ final class JsonDecodeTest extends TestCase
         $this->assertEquals($expectedOutput, $output);
     }
 
-    public function test_decode_depth_argument() : void
+    /** @test */
+    public function decode_depth_argument() : void
     {
         $this->assertExceptionThrown(JsonException::class, function () {
             Json::decode('{"first":["second"]}', Json::NO_FLAGS, 1);
         });
     }
 
-    public function test_does_not_decode_scalar_or_null() : void
+    /** @test */
+    public function does_not_decode_scalar_or_null() : void
     {
         $arguments = [
             '"string"',

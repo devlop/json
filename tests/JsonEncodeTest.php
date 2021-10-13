@@ -14,7 +14,8 @@ final class JsonEncodeTest extends TestCase
 {
     use ExceptionAssertions;
 
-    public function test_encode_throws_exception_on_error()
+    /** @test */
+    public function encode_throws_exception_on_error()
     {
         $recursion = [
             &$recursion,
@@ -33,7 +34,8 @@ final class JsonEncodeTest extends TestCase
         }
     }
 
-    public function test_encodes_integer_values_array() : void
+    /** @test */
+    public function encodes_integer_values_array() : void
     {
         $output = Json::encode([
             1,
@@ -46,7 +48,8 @@ final class JsonEncodeTest extends TestCase
         $this->assertEquals($expectedOutput, $output);
     }
 
-    public function test_encodes_string_values_array() : void
+    /** @test */
+    public function encodes_string_values_array() : void
     {
         $output = Json::encode([
             'one',
@@ -59,7 +62,8 @@ final class JsonEncodeTest extends TestCase
         $this->assertEquals($expectedOutput, $output);
     }
 
-    public function test_encodes_keyed_integer_values_array() : void
+    /** @test */
+    public function encodes_keyed_integer_values_array() : void
     {
         $output = Json::encode([
             'first' => 1,
@@ -72,7 +76,8 @@ final class JsonEncodeTest extends TestCase
         $this->assertEquals($expectedOutput, $output);
     }
 
-    public function test_encodes_keyed_string_values_array() : void
+    /** @test */
+    public function encodes_keyed_string_values_array() : void
     {
         $output = Json::encode([
             'first' => 'one',
@@ -85,7 +90,8 @@ final class JsonEncodeTest extends TestCase
         $this->assertEquals($expectedOutput, $output);
     }
 
-    public function test_encodes_object() : void
+    /** @test */
+    public function encodes_object() : void
     {
         $object = new class {
             public string $name = 'The Numbers';
@@ -99,7 +105,8 @@ final class JsonEncodeTest extends TestCase
         $this->assertEquals($expectedOutput, $output);
     }
 
-    public function test_encodes_json_serializable_object() : void
+    /** @test */
+    public function encodes_json_serializable_object() : void
     {
         $object = new class implements \JsonSerializable {
             public string $name = 'The Numbers';
@@ -120,7 +127,8 @@ final class JsonEncodeTest extends TestCase
         $this->assertEquals($expectedOutput, $output);
     }
 
-    public function test_encode_flags_argument() : void
+    /** @test */
+    public function encode_flags_argument() : void
     {
         $input = [
             '1',
@@ -147,7 +155,8 @@ final class JsonEncodeTest extends TestCase
         }
     }
 
-    public function test_encode_depth_argument() : void
+    /** @test */
+    public function encode_depth_argument() : void
     {
         $argument = [
             'first' => 'one',
@@ -169,7 +178,8 @@ final class JsonEncodeTest extends TestCase
         });
     }
 
-    public function test_does_not_encode_scalar_or_null_arguments() : void
+    /** @test */
+    public function does_not_encode_scalar_or_null_arguments() : void
     {
         $arguments = [
             'string',
@@ -187,7 +197,8 @@ final class JsonEncodeTest extends TestCase
         }
     }
 
-    public function test_encodes_array_and_objects() : void
+    /** @test */
+    public function encodes_array_and_objects() : void
     {
         $arguments = [
             [1, 2, 3],
