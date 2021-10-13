@@ -30,8 +30,10 @@ final class Json
         }
     }
 
-    private static function assertCanDecode($value) : void
+    private static function assertCanDecode(string $value) : void
     {
+        $value = \trim($value);
+
         $ends = \mb_substr($value, 0, 1) . \mb_substr($value, -1);
 
         if (! \in_array($ends, ['[]', '{}'], true)) {

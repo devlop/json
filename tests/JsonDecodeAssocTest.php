@@ -41,4 +41,28 @@ final class JsonDecodeAssocTest extends TestCase
 
         $this->assertEquals($expectedOutput, $output);
     }
+
+    /** @test */
+    public function string_starting_or_ending_with_whitespace_can_be_decoded() : void
+    {
+        $input = '
+            {
+                "first": 1,
+                "second": 2,
+                "third": 3
+            }
+            ';
+
+        $output = Json::decodeAssoc($input);
+
+        $this->assertIsArray($output);
+
+        $expectedOutput = [
+            'first' => 1,
+            'second' => 2,
+            'third' => 3,
+        ];
+
+        $this->assertEquals($expectedOutput, $output);
+    }
 }
